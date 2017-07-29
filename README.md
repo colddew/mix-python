@@ -1,2 +1,2 @@
 # mix-python
-python script
+python script playground
