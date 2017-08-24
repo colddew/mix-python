@@ -5,6 +5,8 @@ import urllib2
 import re
 import os
 
+from Tool import Tool
+
 
 # 处理页面标签类
 class Tool:

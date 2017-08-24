@@ -139,7 +139,7 @@ class TieBa:
             print "写入任务完成"
 
 if __name__ == '__main__':
-    baseURL = 'http://tieba.baidu.com/p/' + str(raw_input("请输入帖子代号\n"))
+    baseURL = 'http://tieba.baidu.com/p/' + str(raw_input("请输入帖子代号\n")) # 3138733512
     seeLZ = raw_input("是否只获取楼主发言，是输入1，否输入0\n")
     floorTag = raw_input("是否写入楼层信息，是输入1，否输入0\n")
     tieba = TieBa(baseURL, seeLZ, floorTag)
