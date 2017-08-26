@@ -3,6 +3,7 @@
 *~
 /build
 /code
+/data
 .classpath
 .project
 .settings
