@@ -9,7 +9,7 @@ import re
 
 class Handler(BaseHandler):
     crawl_config = {
-        'itag': 'v1.0'
+        'itag': 'v1.1'
     }
 
     def __init__(self):
@@ -123,9 +123,13 @@ class Handler(BaseHandler):
         print breed_difficulty
         temperature = items[3].text()
         print temperature
-        sunshine = items[4]('img').attr.src[-5:-4]
-        print sunshine
-        moisture = items[5]('img').attr.src[-5:-4]
+        ss = items[4]('img').attr.src[-5:-4]
+        if ss:
+            sunshine = sunshine + ',' + ss
+        print ss
+        mo = items[5]('img').attr.src[-5:-4]
+        if mo:
+            moisture = moisture + ',' + mo
         print moisture
 
         div = response.doc('.cbRight .borderTop div').html()
