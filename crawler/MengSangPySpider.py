@@ -6,10 +6,12 @@
 from pyspider.libs.base_handler import *
 from pymongo import MongoClient
 import re
+import os
+
 
 class Handler(BaseHandler):
     crawl_config = {
-        'itag': 'v1.1'
+        'itag': 'v1.2'
     }
 
     def __init__(self):
@@ -37,7 +39,7 @@ class Handler(BaseHandler):
             species = detail.text().strip()
             image = each('.tImgUlImg a').attr("data-preview")
             if detail_url and species and image:
-                self.crawl(detail_url, callback=self.detail_page, save={'species': species, 'image': image})
+                self.crawl(detail_url.replace(' ', '%20'), callback=self.detail_page, save={'species': species, 'image': image})
 
     def detail_page(self, response):
 
@@ -165,11 +167,12 @@ class Handler(BaseHandler):
         if not result:
             self.mongo_db['spider'].insert(species)
 
-        self.crawl(image, callback=self.store_image, save={'file_name': species_name})
+        self.crawl(image.replace(' ', '%20'), callback=self.store_image, save={'file_name': species_name})
 
     def store_image(self, response):
         content = response.content
         file_path = self.image_path + response.save['file_name'] + ".png"
-        f = open(file_path, 'wb')
-        f.write(content)
-        f.close()
+        if not os.path.exists(file_path):
+            f = open(file_path, 'wb')
+            f.write(content)
+            f.close()

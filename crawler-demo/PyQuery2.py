@@ -3,7 +3,10 @@
 from pyquery import PyQuery as pq
 from lxml import etree
 import re
+from urllib import quote
 
+print quote('http://www.mengsang.com/duorou/list_1_1.html')
+print quote('http://www.mengsang.com/duorou/jingtianke/nishilianshu/Echeveria-Ben Badis.html')
 
 html = """
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
