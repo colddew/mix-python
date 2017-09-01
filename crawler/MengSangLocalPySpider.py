@@ -1,17 +1,17 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
-# Created on 2017-08-28 23:53:30
 # Project: mengsang
 
 from pyspider.libs.base_handler import *
 from pymongo import MongoClient
 import re
 import os
+import codecs
 
 
 class Handler(BaseHandler):
     crawl_config = {
-        'itag': 'v1.3'
+
     }
 
     def __init__(self):
@@ -24,21 +24,15 @@ class Handler(BaseHandler):
         self.mongo_db = self.mongo_client['succulent']
 
     def on_start(self):
-        self.crawl(self.base_url, callback=self.index_page)
-
-    def index_page(self, response):
-        strong = response.doc('.pageinfo strong:first').text()
-        self.page_no = int(strong)
-        for index in range(1, self.page_no + 1):
-            self.crawl(self.pagination_url.format(index), callback=self.list_page)
-
-    def list_page(self, response):
-        for each in response.doc('.tImgUl li').items():
-            detail = each('.tImgIcons a')
-            detail_url = detail.attr.href
-            species = detail.text().strip()
-            if detail_url and species:
-                self.crawl(detail_url.replace(' ', '%20'), callback=self.detail_page, save={'species': species})
+        with codecs.open('/Users/anmy/Downloads/tmp/mengsang.log', 'r', 'utf-8') as f:
+            lines = f.readlines()
+            species = lines[::2]
+            urls = lines[1::2]
+            if len(species) == len(urls):
+                for i in range(0, len(species)):
+                    print species[i]
+                    print urls[i]
+                    self.crawl(urls[i].replace(' ', '%20'), callback=self.detail_page, save={'species': species[i].strip()})
 
     def detail_page(self, response):
 
@@ -62,14 +56,13 @@ class Handler(BaseHandler):
         description = ''
 
         # extract data
+        image_path = response.doc('.cbLeft img:first').attr.src
+        if image_path:
+            image = image_path
+
         for each in response.doc('.cbLeft li').items():
 
-            if u'/uploads/' in each.html():
-                image_path = each('img').attr.src
-                if image_path:
-                    image = image_path
-
-            if u'http://www.mengsang.com' in each.html():
+            if u'http://www.mengsang.com/duorou' in each.html():
 
                 for td in each('table td').items():
 
