@@ -11,7 +11,7 @@ import math
 # check mongo: db.runCommand({"distinct":"vendor", "key":"speciesName"})
 class Handler(BaseHandler):
     crawl_config = {
-        'itag': 'v1.0'
+        'itag': 'v1.1'
     }
 
     def __init__(self):
@@ -38,17 +38,19 @@ class Handler(BaseHandler):
             a = each('.portfolio-title a')
             list_page_url = a.attr.href
             species_name = a.text().strip()
-            image = 'http://duorou.com/' + each('.portfolio-img img').attr.src
+            image = each('.portfolio-img img').attr.src
             self.crawl(list_page_url, callback=self.detail_page,
                        save={'species_name': species_name, 'image': image})
 
     def detail_page(self, response):
-
         species_name = response.save['species_name']
         image = response.save['image']
-        print response.doc('.ProductD li').length
-        for each in response.doc('.ProductD li').items():
+        lis = response.doc('.ProductD li')
+        for each in lis.items():
             size = each.text().strip()
+            imageUrl = image
+            if each.attr.image and lis.length > 1:
+                imageUrl = 'http://duorou.com/' + each.attr.image
 
             species = {
                 'speciesName': species_name,
@@ -56,7 +58,7 @@ class Handler(BaseHandler):
                 'originalPrice': each.attr.price,
                 'promotionPrice': each.attr.promote,
                 'inventory': each.attr.num,
-                'imageUrl': 'http://duorou.com/' + each.attr.image,
+                'imageUrl': imageUrl,
                 'detailUrl': response.url,
                 'vendor': 'wanxiang'
             }
