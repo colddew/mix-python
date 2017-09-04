@@ -5,6 +5,7 @@
 
 from pyspider.libs.base_handler import *
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 import math
 
 
@@ -52,17 +53,21 @@ class Handler(BaseHandler):
             if each.attr.image and lis.length > 1:
                 imageUrl = 'http://duorou.com/' + each.attr.image
 
-            species = {
-                'speciesName': species_name,
-                'size': size,
-                'originalPrice': each.attr.price,
-                'promotionPrice': each.attr.promote,
-                'inventory': each.attr.num,
-                'imageUrl': imageUrl,
-                'detailUrl': response.url,
-                'vendor': 'wanxiang'
-            }
-
             result = self.mongo_db['vendor'].find_one({'speciesName': species_name, 'size': size})
-            if not result:
-                self.mongo_db['vendor'].insert(species)
+            if result:
+                self.mongo_db['vendor'].update_one({'_id': ObjectId(result['_id'])}, {'$set': {
+                    'originalPrice': each.attr.price,
+                    'promotionPrice': each.attr.promote,
+                    'inventory': each.attr.num
+                }})
+            else:
+                self.mongo_db['vendor'].insert({
+                    'speciesName': species_name,
+                    'size': size,
+                    'originalPrice': each.attr.price,
+                    'promotionPrice': each.attr.promote,
+                    'inventory': each.attr.num,
+                    'imageUrl': imageUrl,
+                    'detailUrl': response.url,
+                    'vendor': 'wanxiang'
+                })
