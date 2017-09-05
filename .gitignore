@@ -25,3 +25,4 @@ settings.xml
 *.jar
 .DS_Store
 */test-output/
+*/ghostdriver.log
