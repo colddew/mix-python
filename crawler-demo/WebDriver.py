@@ -22,8 +22,8 @@ class WebDriver(unittest.TestCase):
         assert "No results found." not in driver.page_source
 
     def tearDown(self):
-        self.driver.close()
-
+        # self.driver.close()
+        pass
 
 if __name__ == "__main__":
     # browser = webdriver.Chrome()

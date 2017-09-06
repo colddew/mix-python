@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,7 +11,7 @@ import random
 import json
 
 
-class TianXunCrawler(object):
+class WanXiangCrawler(object):
 
     def __init__(self):
         self.base = ''
@@ -60,16 +59,21 @@ class TianXunCrawler(object):
             'Cache-Control': 'no-cache',
             "User-Agent": random.choice(self.user_agent_list),
             'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
+            'Upgrade-Insecure-Requests': '1'
             # "Accept-Encoding": "gzip",
-            "Referer": "https://www.tianxun.com"
+            # "Referer": "https://www.tianxun.com"
         }
 
     def get_proxy(self):
         # print requests.get("http://182.254.155.112:5000/get/").content
-        return '52.80.72.137:33862'
+        return '183.60.194.30:80'
 
-    def fetch_price(self):
+    def check_proxy(self):
+        response = requests.get('http://www.ip181.com/', headers=self.headers, proxies={'http': 'http://{}'.format(self.get_proxy())})
+        print response.content.decode('gbk')
+        time.sleep(random.choice(self.interval_list))
+
+    def check_tab(self):
         service_args = [
             '--proxy={}'.format(self.get_proxy()),
             '--proxy-type=http',
@@ -82,37 +86,16 @@ class TianXunCrawler(object):
         desired_capabilities['phantomjs.page.settings.userAgent'] = self.headers['User-Agent']
 
         driver = webdriver.PhantomJS(desired_capabilities=desired_capabilities, service_args=service_args)
-        driver.get("https://www.tianxun.com")
-        print driver.get_cookies()
-
-        driver.get("https://www.tianxun.com/intl-oneway-chgh-sins.html?depdate=2017-09-07&cabin=Economy&adult=1&child=0&infant=0")
-        driver.find_element_by_xpath("//div[@class='list_title_test']//a[2]").click()
-        wait = WebDriverWait(driver, 15)
-        wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='fly_int_re']//div[@class='book_info']//b")))
-        print driver.find_element_by_xpath("//div[@class='fly_int_re']//div[@class='book_info']//b").text
-
+        # driver.set_page_load_timeout(20)
+        driver.get("http://duorou.com/duorou-qiuli-1202.html")
+        wait = WebDriverWait(driver, 30)
+        wait.until(lambda driver: driver.find_element_by_xpath("//dd[@class='goods_w']//li"))
+        li = driver.find_element_by_xpath("//dd[@class='goods_w']//li[last()]")
+        li.click()
+        print driver.find_element_by_id('goods_price').text
         driver.close()
 
-    def fetch_chrome_price(self):
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--proxy-server=http://{}'.format(self.get_proxy()))
-
-        for key, value in self.headers.iteritems():
-            chrome_options.add_argument('{}:{}'.format(key, value))
-
-        chrome = webdriver.Chrome(chrome_options=chrome_options)
-        chrome.get("https://www.tianxun.com")
-        print chrome.get_cookies()
-
-        chrome.get('https://www.tianxun.com/intl-oneway-chgh-sins.html?depdate=2017-09-16&cabin=Economy&adult=1&child=0&infant=0')
-        chrome.find_element_by_xpath("//div[@class='list_title_test']//a[2]").click()
-        wait = WebDriverWait(chrome, 15)
-        wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='fly_int_re']//div[@class='book_info']//b")))
-        print chrome.find_element_by_xpath("//div[@class='fly_int_re']//div[@class='book_info']//b").text
-
-        chrome.close()
-
 if __name__ == '__main__':
-    crawler = TianXunCrawler()
-    # crawler.fetch_price()
-    crawler.fetch_chrome_price()
+    crawler = WanXiangCrawler()
+    crawler.check_proxy()
+    crawler.check_tab()
