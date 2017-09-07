@@ -65,8 +65,10 @@ class WanXiangCrawler(object):
         }
 
     def get_proxy(self):
-        # print requests.get("http://182.254.155.112:5000/get/").content
-        return '183.60.194.30:80'
+        proxy = requests.get("http://182.254.155.112:5000/get/").content
+        print proxy
+        return proxy
+        # return '111.13.7.122:80'
 
     def check_proxy(self):
         response = requests.get('http://www.ip181.com/', headers=self.headers, proxies={'http': 'http://{}'.format(self.get_proxy())})
@@ -98,4 +100,4 @@ class WanXiangCrawler(object):
 if __name__ == '__main__':
     crawler = WanXiangCrawler()
     crawler.check_proxy()
-    crawler.check_tab()
+    # crawler.check_tab()
