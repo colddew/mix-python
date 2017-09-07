@@ -91,7 +91,12 @@ class TianXunCrawler(object):
         driver.get('https://www.tianxun.com/intl-oneway-chgh-sins.html?depdate=2017-09-16&cabin=Economy&adult=1&child=0&infant=0')
         print driver.page_source
         wait = WebDriverWait(driver, 15)
+
         driver.find_element_by_xpath("//div[@class='close absolute cursor']").click()
+        # driver.SwitchTo().Alert()
+        # driver.SwitchTo().Window(<windowname>)
+        # driver.SwitchTo().Frame("iFrmLinks")
+
         driver.find_element_by_xpath("//div[@class='list_title_test']//a[2]").click()
         wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='fly_int_re']//div[@class='book_info']//b")))
         print driver.find_element_by_xpath("//div[@class='fly_int_re']//div[@class='book_info']//b").text
@@ -110,6 +115,9 @@ class TianXunCrawler(object):
         cookies = chrome.get_cookies()
         print cookies
 
+        for item in cookies:
+            chrome.add_cookie({'domain': '.tianxun.com', 'name': item['name'], 'value': item['value'], 'path': '/', 'expires': None})
+
         chrome.get('https://www.tianxun.com/intl-oneway-chgh-sins.html?depdate=2017-09-16&cabin=Economy&adult=1&child=0&infant=0')
         chrome.find_element_by_xpath("//div[@class='list_title_test']//a[2]").click()
         wait = WebDriverWait(chrome, 30)
@@ -120,5 +128,5 @@ class TianXunCrawler(object):
 
 if __name__ == '__main__':
     crawler = TianXunCrawler()
-    crawler.fetch_price()
-    # crawler.fetch_chrome_price()
+    # crawler.fetch_price()
+    crawler.fetch_chrome_price()
