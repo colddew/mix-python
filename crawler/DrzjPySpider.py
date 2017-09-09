@@ -95,7 +95,7 @@ class Handler(BaseHandler):
             self.has_page = False
 
     def detail_page(self, response):
-        species_id = response.save['speciesId']
+        species_id = response.save['species_id']
         species_name = response.save['species_name']
 
         result = json.loads(response.text)
@@ -108,7 +108,7 @@ class Handler(BaseHandler):
                     result = self.mongo_db['spider_drzj_image'].find_one({'speciesName': species_name, 'image': image})
                     if not result:
                         self.mongo_db['spider_drzj_image'].insert({
-                            'species_id': species_id,
+                            'speciesId': species_id,
                             'speciesName': species_name,
                             'image': image
                         })

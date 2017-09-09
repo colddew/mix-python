@@ -18,7 +18,7 @@ class Handler(BaseHandler):
         self.base_url = 'http://www.mengsang.com/duorou'
         self.pagination_url = 'http://www.mengsang.com/duorou/list_1_{}.html'
         self.page_no = 1
-        self.image_path = '/Users/anmy/Downloads/tmp/succulent/'
+        self.image_path = '/Users/anmy/Downloads/tmp/mengsang/'
         self.mongo_url = 'mongodb://127.0.0.1:27017/succulent'
         self.mongo_client = MongoClient(self.mongo_url)
         self.mongo_db = self.mongo_client['succulent']
