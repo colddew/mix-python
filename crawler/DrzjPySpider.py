@@ -8,6 +8,9 @@ from pymongo import MongoClient
 import json
 
 
+# db.spider_drzj_image.find({'speciesName':'阿修罗'})
+# db.runCommand({"distinct":"spider_drzj_image", "key":"speciesName"})
+# db.spider_drzj.group( { key: { 'speciesName': true}, initial: {count: 0}, reduce: function(obj,prev){ prev.count++;} } )
 class Handler(BaseHandler):
     crawl_config = {
         'itag': 'v1.0'
