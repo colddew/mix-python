@@ -15,7 +15,7 @@ class Handler(BaseHandler):
         self.pagination_url = 'https://app.tefact.com/plant/page'
         self.detail_url = 'https://app.tefact.com/plant/find'
         self.image_path = '/Users/anmy/Downloads/tmp/zqplant/'
-        self.image_prefix = '/Users/anmy/Downloads/tmp/zqplant/'
+        self.image_prefix = 'http://file.duorou.me/'
         self.mongo_url = 'mongodb://127.0.0.1:27017/succulent'
         self.mongo_client = MongoClient(self.mongo_url)
         self.mongo_db = self.mongo_client['succulent']

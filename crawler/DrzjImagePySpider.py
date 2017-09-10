@@ -33,7 +33,7 @@ class Handler(BaseHandler):
 
         species_name = response.save['species_name']
         species_id = response.save['species_id']
-        print 'download image success, {}, {}'.format(species_id, response.url)
+
         dir_path = self.image_path + species_name + "/"
         if not os.path.exists(dir_path):
             os.makedirs(dir_path)
@@ -44,7 +44,6 @@ class Handler(BaseHandler):
                 f = open(image_path, 'wb')
                 f.write(response.content)
                 f.close()
-                print 'download image success, {}, {}'.format(species_id, response.url)
                 print 'download image success, {}, {}, {}'.format(species_name, species_id, response.url)
             except:
                 print 'download image fail, {}, {}, {}'.format(species_name, species_id, response.url)
