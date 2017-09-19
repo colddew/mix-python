@@ -7,12 +7,13 @@ from pyspider.libs.base_handler import *
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import math
+import datetime
 
 
 # check mongo: db.runCommand({"distinct":"vendor", "key":"speciesName"})
 class Handler(BaseHandler):
     crawl_config = {
-        'itag': 'v1.1'
+        'itag': 'v1.2'
     }
 
     def __init__(self):
@@ -25,6 +26,7 @@ class Handler(BaseHandler):
         self.mongo_client = MongoClient(self.mongo_url)
         self.mongo_db = self.mongo_client['succulent']
 
+    @every(minutes=60)
     def on_start(self):
         self.crawl(self.base_url, callback=self.index_page)
 
@@ -58,7 +60,8 @@ class Handler(BaseHandler):
                 self.mongo_db['vendor'].update_one({'_id': ObjectId(result['_id'])}, {'$set': {
                     'originalPrice': each.attr.price,
                     'promotionPrice': each.attr.promote,
-                    'inventory': each.attr.num
+                    'inventory': each.attr.num,
+                    'updateTime': datetime.datetime.utcnow()
                 }})
             else:
                 self.mongo_db['vendor'].insert({
@@ -69,5 +72,6 @@ class Handler(BaseHandler):
                     'inventory': each.attr.num,
                     'imageUrl': imageUrl,
                     'detailUrl': response.url,
-                    'vendor': 'wanxiang'
+                    'vendor': 'wanxiang',
+                    'updateTime': datetime.datetime.utcnow()
                 })
