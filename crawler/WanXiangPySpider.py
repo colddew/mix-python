@@ -13,7 +13,7 @@ import datetime
 # check mongo: db.runCommand({"distinct":"vendor", "key":"speciesName"})
 class Handler(BaseHandler):
     crawl_config = {
-        'itag': 'v1.2'
+        'itag': 'v1.3'
     }
 
     def __init__(self):
@@ -30,6 +30,7 @@ class Handler(BaseHandler):
     def on_start(self):
         self.crawl(self.base_url, callback=self.index_page)
 
+    @config(age=30 * 60)
     def index_page(self, response):
         total = int(response.doc('#pager b:first').text().strip())
         self.page_no = int(math.ceil(float(total) / self.page_size))
